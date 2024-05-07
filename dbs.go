@@ -8,6 +8,7 @@ import (
 	"github.com/myfstd/gdbs/sqlx"
 	"github.com/myfstd/gdbs/types"
 	"github.com/myfstd/gdbs/util"
+	"log"
 	"path/filepath"
 	"reflect"
 	"runtime"
@@ -243,7 +244,7 @@ func (h *Handle) mapperSearch(db sqlx.DB, typ int, res interface{}, sqlItem type
 			sql = h.mapperGetRealSql(sqlItem, key, e)
 		}
 	}
-	fmt.Printf("sql=>%s\n", strings.TrimSpace(sql))
+	log.Printf("sql=>%s\n", strings.TrimSpace(sql))
 	if typ == 0 {
 		return db.Get(res, sql)
 	}
@@ -266,7 +267,7 @@ func (h *Handle) mapperUpdate(db sqlx.DB, sqlItem types.SqlVal, param ...interfa
 			sql = h.mapperGetRealSql(sqlItem, key, e)
 		}
 	}
-	fmt.Printf("sql=>%s\n", strings.TrimSpace(sql))
+	log.Printf("sql=>%s\n", strings.TrimSpace(sql))
 	r, err := db.Exec(sql)
 	if err != nil {
 		return nil, err
@@ -292,7 +293,7 @@ func (h *Handle) mapperInsert(db sqlx.DB, sqlItem types.SqlVal, param ...interfa
 		}
 	}
 	sql = util.RepAtWords(sql, "@", "null")
-	fmt.Printf("sql=>%s\n", strings.TrimSpace(sql))
+	log.Printf("sql=>%s\n", strings.TrimSpace(sql))
 
 	r, err := db.Exec(sql)
 	if err != nil {
@@ -318,7 +319,7 @@ func (h *Handle) mapperDelete(db sqlx.DB, sqlItem types.SqlVal, param ...interfa
 			sql = h.mapperGetRealSql(sqlItem, key, e)
 		}
 	}
-	fmt.Printf("sql=>%s\n", strings.TrimSpace(sql))
+	log.Printf("sql=>%s\n", strings.TrimSpace(sql))
 	r, err := db.Exec(sql)
 	id, _ := r.LastInsertId()
 	return id, err
@@ -518,7 +519,7 @@ func (h *Handle) entityInsertSql(table string, t reflect.Type, entity interface{
 	strItem := strings.Replace(strings.Trim(fmt.Sprint(sqlItem), "[]"), " ", ",", -1)
 	strVal := strings.Replace(strings.Trim(fmt.Sprint(sqlVal), "[]"), " ", ",", -1)
 	sql = sql + "(" + strItem + ") values(" + strVal + ")"
-	fmt.Println(sql)
+	log.Println(sql)
 	return sql, nil
 }
 func (h *Handle) entityUpdateSql(table string, t reflect.Type, entity interface{}) (string, error) {
